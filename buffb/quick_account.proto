@@ -1,0 +1,75 @@
+syntax = "proto3";
+option go_package = "buffb";
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+  info: {
+    title: "quick_account_management";
+    version: "0.0.1";
+  }
+
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+};
+
+message QuickEntry {
+  string quickID = 1;
+  string userID = 2;
+  int64 quickTime = 3;
+}
+
+message QuickAccount {
+  string uuid = 1;
+  string username = 2;
+  string pswdhash = 3;
+  string email = 4;
+  Recovery recovery = 5; 
+}
+
+message Recovery { string recovery = 5; }
+
+message QuickAccounts {
+  repeated QuickAccount accounts = 1;
+}
+
+message QuickEntries {
+  repeated QuickEntry entries = 1;
+}
+
+service QuickService {
+  rpc CreateAccount(QuickAccount) returns (QuickAccount) {
+    option (google.api.http) = {
+      post: "/v1/accounts"
+      body: "*"
+    };
+  }
+
+  rpc GetAccounts(google.protobuf.Empty) returns (QuickAccounts) {
+    option (google.api.http) = {
+      get: "/v1/accounts"
+    };
+  }
+
+  rpc GetAccountByUUID(QuickAccount) returns (QuickAccount) {
+    option (google.api.http) = {
+      get: "/v1/accounts/uuid/{uuid}"
+    };
+  }
+
+  rpc CreateEntry(QuickEntry) returns (QuickEntry) {
+    option (google.api.http) = {
+      post: "/v1/entries"
+      body: "*"
+    };
+  }
+
+  rpc GetEntries(google.protobuf.Empty) returns (QuickEntries) {
+    option (google.api.http) = {
+      get: "/v1/entries"
+    };
+  }
+}

@@ -1,0 +1,12 @@
+
+version: '3.7'
+
+services:
+
+  qa-mongo-db:
+    image: mongo:4.0.16-xenial
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rooty
+    ports:
+      - 27017:27017
